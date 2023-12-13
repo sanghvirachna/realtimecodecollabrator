@@ -4,7 +4,7 @@ const { v4: uuidv4 } = require('uuid');
 const directoryPath = './codes';
 const { exec } = require('child_process');
 
-async function generateFile(language, code) {
+async function runCode(language, code) {
     const uuid = uuidv4();
     if(!fs.existsSync(directoryPath)){
         fs.mkdirSync(directoryPath);    
@@ -49,7 +49,7 @@ async function generateFile(language, code) {
             console.log("File deleted successfully");
         }
     });
-    
+
     if (language === 'cpp') {
         const exeFilePath = `${filePath}.exe`;
         fs.unlink(exeFilePath, (err) => {
@@ -65,5 +65,5 @@ async function generateFile(language, code) {
 }
 
 module.exports = {
-    generateFile
+    runCode
 }
