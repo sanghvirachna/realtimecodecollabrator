@@ -41,7 +41,25 @@ async function generateFile(language, code) {
             resolve(stdout);
         });
     });
-
+    
+    fs.unlink(filePath, (err) => {
+        if (err) {
+            console.error(`Error deleting file: ${err.message}`);
+        } else {
+            console.log("File deleted successfully");
+        }
+    });
+    
+    if (language === 'cpp') {
+        const exeFilePath = `${filePath}.exe`;
+        fs.unlink(exeFilePath, (err) => {
+            if (err) {
+                console.error(`Error deleting .exe file: ${err.message}`);
+            } else {
+                console.log(".exe file deleted successfully");
+            }
+        });
+    }
 
     return output;
 }
