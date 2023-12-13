@@ -10,8 +10,8 @@ app.get('/',(req,res) => {
 app.post('/run', async (req,res) => {
     try{
         const {language,code} = req.body;
-        const filePath = await generateFile(language,code);
-        res.json({language,code,filePath})
+        const output = await generateFile(language,code);
+        res.json({language,code,output})
     }catch(error){
         res.json({message:error.message})
     
