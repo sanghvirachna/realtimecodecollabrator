@@ -1,10 +1,15 @@
-import React,{useState} from 'react'
+import React,{useEffect, useState} from 'react'
 import axios from 'axios';
+//react-avatar
+//codemirror
 
-const Room = () => {
-    const [code, setCode] = useState("");
+const Workspace = () => {
+  const [code, setCode] = useState("");
   const [output, setOutput] = useState("");
   const [language, setLanguage] = useState("python");
+  
+
+
   const handleSubmit = async () => {
     console.log(code)
     const payload = {
@@ -40,4 +45,4 @@ const Room = () => {
   );
 }
 
-export default Room
+export default Workspace;
