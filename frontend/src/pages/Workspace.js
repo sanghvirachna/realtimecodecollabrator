@@ -1,4 +1,4 @@
-import React,{ useState} from 'react'
+import React,{ useState ,useEffect} from 'react'
 import axios from 'axios';
 import Avatar from 'react-avatar';
 import CodeMirror  from "react-codemirror";
@@ -18,6 +18,46 @@ const Workspace = () => {
   const [output, setOutput] = useState("");
   const [language, setLanguage] = useState("python");
   const [input, setInput] = useState("")
+  useEffect(() => {
+    switch (language) {
+      case 'python':
+        setCode("print('Hello, world!')");
+        break;
+      case 'java':
+        setCode(
+          `public class Main {
+      public static void main(String[] args) {
+              // Your code goes here
+      }
+}`
+        );
+        break;
+      case 'cpp':
+        setCode(
+          `#include <iostream>
+using namespace std;
+int main() {
+   // Your code goes here
+   return 0;
+}`
+        );
+        break;
+      default:
+        setCode("");
+    }
+  }, [language]);
+  const getMode = (language) => {
+    switch (language) {
+      case 'python':
+        return 'python';
+      case 'java':
+        return 'text/x-java';
+      case 'cpp':
+        return 'text/x-c++src';
+      default:
+        return 'python';
+    }
+  };
   
 
 
@@ -45,9 +85,10 @@ const Workspace = () => {
   return (
     <>
     <CodeMirror
+        key = {code}
         value={code}
         onChange={(value) => setCode(value)}
-        options={{ mode: `${language}`, theme: 'darcula', lineNumbers: true,    autoCloseBrackets: true
+        options={{ mode: getMode(language), theme: 'darcula', lineNumbers: true,    autoCloseBrackets: true
       }}
       />
       
@@ -62,7 +103,7 @@ const Workspace = () => {
       <br></br>
       <input type="text" value={input} placeholder="Input" onChange={(e) => setInput(e.target.value)} />
       <button onClick={handleSubmit}>Run Code</button>
-      <p>{output}</p>
+      <p>{output.output}</p>
     </>
   );
 }
