@@ -1,20 +1,11 @@
 import React, { useState, useEffect ,useRef } from 'react'
 import { useLocation , useNavigate ,useParams } from 'react-router-dom';
+import CodeEditor from './CodeEditor';
 import axios from 'axios';
 import Avatar from 'react-avatar';
 import  toast  from 'react-hot-toast'
-import CodeMirror from "react-codemirror";
-import './Workspace.css';
-import 'codemirror/lib/codemirror.css';
-import 'codemirror/mode/javascript/javascript.js';
-import 'codemirror/theme/darcula.css';
-import 'codemirror/mode/python/python.js';
-import 'codemirror/mode/clike/clike.js'; // for Java and C++
-import 'codemirror/addon/edit/closebrackets.js';
 import { initSocket } from './socket';
 
-//react-avatar
-//codemirror
 
 const Workspace = () => {
   const [code, setCode] = useState("");
@@ -64,49 +55,12 @@ const Workspace = () => {
        })
     }
     init()
+    // return () => {
+    //   socketRef.current.off('joined')
+    //   socketRef.current.off('disconnected')
+    //   socketRef.current.disconnect()
+    // }
  },[])
-
-  useEffect(() => {
-    switch (language) {
-      case 'python':
-        setCode("print('Hello, world!')");
-        break;
-      case 'java':
-        setCode(
-          `public class Main {
-      public static void main(String[] args) {
-              // Your code goes here
-      }
-}`
-        );
-        break;
-      case 'cpp':
-        setCode(
-          `#include <iostream>
-using namespace std;
-int main() {
-   // Your code goes here
-   return 0;
-}`
-        );
-        break;
-      default:
-        setCode("");
-    }
-  }, [language]);
-
-  const getMode = (language) => {
-    switch (language) {
-      case 'python':
-        return 'python';
-      case 'java':
-        return 'text/x-java';
-      case 'cpp':
-        return 'text/x-c++src';
-      default:
-        return 'python';
-    }
-  };
 
 
   const handleSubmit = async () => {
@@ -132,16 +86,8 @@ int main() {
 
   return (
     <>
-      <CodeMirror
-        key={code}
-        value={code}
-        onChange={(value) => setCode(value)}
-        options={{
-          mode: getMode(language), theme: 'darcula', lineNumbers: true, autoCloseBrackets: true
-        }}
-      />
-
-
+      
+      <CodeEditor language={language}  />
       {
         connectedClients.length > 0 && (
           connectedClients.map((client) => {
