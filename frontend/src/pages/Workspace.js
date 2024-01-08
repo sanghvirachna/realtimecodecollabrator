@@ -25,6 +25,7 @@ const Workspace = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const workspaceId = useParams().id;
+  const [connectedClients,setConnectedClients] = useState([]);
 
   useEffect(() => {
     
@@ -44,7 +45,15 @@ const Workspace = () => {
          workspaceId,
          username: location.state.username
        })
-       
+        socketRef.current.on('joined' ,({clients,username,socketId}) => {
+         if(username !== location.state.username){
+           toast.success(`${username} joined workspace`, {
+             position: "top-center"
+           })
+         }
+         setConnectedClients(clients)
+         console.log(clients)
+        })
 
     }
     init()
@@ -126,8 +135,13 @@ int main() {
       />
 
 
-      <Avatar name="Wim Mostmans" size="150" textSizeRatio={1.75} round="50%" />
-
+      {
+        connectedClients.length > 0 && (
+          connectedClients.map((client) => {
+            return <Avatar name={client.username} size="100" textSizeRatio={1.75} round="50%" />
+          })
+        )
+      }
       <select value={language} onChange={handleLanguageChange}>
         <option value="python">Python</option>
         <option value="java">Java</option>

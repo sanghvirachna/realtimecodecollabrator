@@ -25,9 +25,9 @@ const Home = () => {
                     username
                 }
             })
-            toast.success(`${username} joined workspace`, {
-                position: "top-center"
-              })  
+            // toast.success(`${username} joined workspace`, {
+            //     position: "top-center"
+            //   })  
 
         }
     }

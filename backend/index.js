@@ -7,20 +7,40 @@ const {runCode }= require('./runCode.js');
 const app = express();
 const server = http.createServer(app);
 const io  = new Server(server);
+const connectedClients = {};
 
 const userMap ={}
 app.use(cors())
 app.use(express.urlencoded({extended:true}));
 app.use(express.json());
 
+function getAllConnectedClients(workspaceId){
+    return Array.from(io.sockets.adapter.rooms.get(workspaceId) || []).map((socketId) => {
+        return {
+            socketId,
+            username: userMap[socketId]
+        }
+    })
+}
 
 io.on('connection', (socket) => {
-    console.log(socket.id + " connected");  
-    socket.on('join',({workspaceId,username}) => {
-        console.log(username + " joined " + workspaceId);
-        userMap[socket.id] = username;
-        console.log(userMap);
-    })
+    socket.on('join', ({ workspaceId, username }) => {
+        // Check if the client is already connected to the workspace
+        if (Object.values(userMap).includes(username)) {
+            // console.log(`User ${username} is already connected`);
+            return;
+          }
+          // Log the joining and add the user to the userMap
+         userMap[socket.id] = username;
+         socket.join(workspaceId);
+         const clients = getAllConnectedClients(workspaceId);
+         console.log(clients)
+         clients.forEach(({socketId}) => {
+            io.to(socketId).emit('joined',{
+                clients,username,socketId:socket.id
+            })
+         })
+        })
 })
 app.post('/run', async (req, res) => {
     try {
