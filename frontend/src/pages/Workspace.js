@@ -1,14 +1,17 @@
-import React,{ useState ,useEffect} from 'react'
+import React, { useState, useEffect ,useRef } from 'react'
+import { useLocation , useNavigate ,useParams } from 'react-router-dom';
 import axios from 'axios';
 import Avatar from 'react-avatar';
-import CodeMirror  from "react-codemirror";
+import  toast  from 'react-hot-toast'
+import CodeMirror from "react-codemirror";
 import './Workspace.css';
 import 'codemirror/lib/codemirror.css';
 import 'codemirror/mode/javascript/javascript.js';
 import 'codemirror/theme/darcula.css';
 import 'codemirror/mode/python/python.js';
 import 'codemirror/mode/clike/clike.js'; // for Java and C++
-import 'codemirror/addon/edit/closebrackets.js'; 
+import 'codemirror/addon/edit/closebrackets.js';
+import { initSocket } from './socket';
 
 //react-avatar
 //codemirror
@@ -18,6 +21,35 @@ const Workspace = () => {
   const [output, setOutput] = useState("");
   const [language, setLanguage] = useState("python");
   const [input, setInput] = useState("")
+  const socketRef = useRef(null);
+  const location = useLocation();
+  const navigate = useNavigate();
+  const workspaceId = useParams().id;
+
+  useEffect(() => {
+    
+    const init = async () => {
+      const handleErrors = (err) => {
+        console.log(err)
+        toast.error(err);
+        navigate('/')
+       }
+       socketRef.current = await initSocket();
+       socketRef.current.on('connect_error',(err) => handleErrors(err))
+       socketRef.current.on('connect_failed',(err) => handleErrors(err))
+       
+
+       
+       socketRef.current.emit('join', {
+         workspaceId,
+         username: location.state.username
+       })
+       
+
+    }
+    init()
+ },[])
+
   useEffect(() => {
     switch (language) {
       case 'python':
@@ -46,6 +78,7 @@ int main() {
         setCode("");
     }
   }, [language]);
+
   const getMode = (language) => {
     switch (language) {
       case 'python':
@@ -58,7 +91,6 @@ int main() {
         return 'python';
     }
   };
-  
 
 
   const handleSubmit = async () => {
@@ -84,16 +116,17 @@ int main() {
 
   return (
     <>
-    <CodeMirror
-        key = {code}
+      <CodeMirror
+        key={code}
         value={code}
         onChange={(value) => setCode(value)}
-        options={{ mode: getMode(language), theme: 'darcula', lineNumbers: true,    autoCloseBrackets: true
-      }}
+        options={{
+          mode: getMode(language), theme: 'darcula', lineNumbers: true, autoCloseBrackets: true
+        }}
       />
-      
-      
-     <Avatar name="Wim Mostmans" size="150" textSizeRatio={1.75}  round="50%"/>
+
+
+      <Avatar name="Wim Mostmans" size="150" textSizeRatio={1.75} round="50%" />
 
       <select value={language} onChange={handleLanguageChange}>
         <option value="python">Python</option>
