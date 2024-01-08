@@ -52,9 +52,16 @@ const Workspace = () => {
            })
          }
          setConnectedClients(clients)
-         console.log(clients)
+         
         })
-
+       socketRef.current.on('disconnected',({socketId,username}) => {
+        toast.success(`${username} left workspace`, {
+          position: "top-center"
+        })
+        setConnectedClients((prevClients) => {
+          return prevClients.filter((client) => client.socketId !== socketId)
+        })
+       })
     }
     init()
  },[])

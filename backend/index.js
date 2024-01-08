@@ -40,7 +40,20 @@ io.on('connection', (socket) => {
                 clients,username,socketId:socket.id
             })
          })
+         
         })
+        socket.on('disconnecting' ,() => {
+            const rooms = [...socket.rooms]
+            rooms.forEach((roomId) => {
+              socket.in(roomId).emit('disconnected',{
+                socketId:socket.id,
+                username:userMap[socket.id]
+              })
+            })
+            delete userMap[socket.id];
+            socket.leave()
+          })
+  
 })
 app.post('/run', async (req, res) => {
     try {
