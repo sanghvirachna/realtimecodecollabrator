@@ -17,6 +17,8 @@ const Workspace = () => {
   const navigate = useNavigate();
   const workspaceId = useParams().id;
   const [connectedClients,setConnectedClients] = useState([]);
+  const [socket, setSocket] = useState(null);  // Add this line
+
 
   useEffect(() => {
     
@@ -27,6 +29,7 @@ const Workspace = () => {
         navigate('/')
        }
        socketRef.current = await initSocket();
+       setSocket(socketRef.current)
        socketRef.current.on('connect_error',(err) => handleErrors(err))
        socketRef.current.on('connect_failed',(err) => handleErrors(err))
        
@@ -87,7 +90,7 @@ const Workspace = () => {
   return (
     <>
       
-      <CodeEditor language={language}  />
+      <CodeEditor language={language} socket={socket}  workspaceId={workspaceId} />
       {
         connectedClients.length > 0 && (
           connectedClients.map((client) => {

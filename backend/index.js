@@ -24,6 +24,7 @@ function getAllConnectedClients(workspaceId){
 }
 
 io.on('connection', (socket) => {
+    console.log("connected")
     socket.on('join', ({ workspaceId, username }) => {
         // Check if the client is already connected to the workspace
         if (Object.values(userMap).includes(username)) {
@@ -33,7 +34,14 @@ io.on('connection', (socket) => {
           // Log the joining and add the user to the userMap
          userMap[socket.id] = username;
          socket.join(workspaceId);
+        
          const clients = getAllConnectedClients(workspaceId);
+         if (!connectedClients[workspaceId]) {
+            connectedClients[workspaceId] = [];
+        }
+        connectedClients[workspaceId].push({
+            socketId: socket.id,
+        });
          console.log(clients)
          clients.forEach(({socketId}) => {
             io.to(socketId).emit('joined',{
@@ -42,6 +50,13 @@ io.on('connection', (socket) => {
          })
          
         })
+
+        socket.on('code-changed',({workspaceId,code}) => {
+            io.emit('code-changed',
+                {code}
+            )
+          })
+
         socket.on('disconnecting' ,() => {
             const rooms = [...socket.rooms]
             rooms.forEach((roomId) => {
@@ -53,7 +68,7 @@ io.on('connection', (socket) => {
             delete userMap[socket.id];
             socket.leave()
           })
-  
+          
 })
 app.post('/run', async (req, res) => {
     try {
