@@ -1,4 +1,4 @@
-import React, { useState, useEffect ,useRef } from 'react'
+import React, { useEffect ,useRef ,useState} from 'react'
 import { useLocation , useNavigate ,useParams } from 'react-router-dom';
 import CodeEditor from './CodeEditor';
 import axios from 'axios';
@@ -18,8 +18,7 @@ const Workspace = () => {
   const workspaceId = useParams().id;
   const [connectedClients,setConnectedClients] = useState([]);
   const [socket, setSocket] = useState(null);  // Add this line
-
-
+  
   useEffect(() => {
     
     const init = async () => {
@@ -46,6 +45,7 @@ const Workspace = () => {
            })
          }
          setConnectedClients(clients)
+         console.log(clients)
          
         })
        socketRef.current.on('disconnected',({socketId,username}) => {
@@ -86,11 +86,12 @@ const Workspace = () => {
     setLanguage(e.target.value)
   }
   console.log(language)
+  console.log(connectedClients)
 
   return (
     <>
       
-      <CodeEditor language={language} socket={socket}  workspaceId={workspaceId} />
+      <CodeEditor language={language} socket={socket}  workspaceId={workspaceId}  connectedClients={connectedClients}/>
       {
         connectedClients.length > 0 && (
           connectedClients.map((client) => {

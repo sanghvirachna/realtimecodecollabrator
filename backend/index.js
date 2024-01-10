@@ -3,13 +3,15 @@ const cors = require('cors');
 const http = require('http');
 const { Server } = require("socket.io");
 const {runCode }= require('./runCode.js');
+const { connected } = require('process');
 
 const app = express();
 const server = http.createServer(app);
 const io  = new Server(server);
-const connectedClients = {};
 
 const userMap ={}
+var clients ;
+
 app.use(cors())
 app.use(express.urlencoded({extended:true}));
 app.use(express.json());
@@ -25,6 +27,7 @@ function getAllConnectedClients(workspaceId){
 
 io.on('connection', (socket) => {
     console.log("connected")
+    
     socket.on('join', ({ workspaceId, username }) => {
         // Check if the client is already connected to the workspace
         if (Object.values(userMap).includes(username)) {
@@ -35,13 +38,8 @@ io.on('connection', (socket) => {
          userMap[socket.id] = username;
          socket.join(workspaceId);
         
+         
          const clients = getAllConnectedClients(workspaceId);
-         if (!connectedClients[workspaceId]) {
-            connectedClients[workspaceId] = [];
-        }
-        connectedClients[workspaceId].push({
-            socketId: socket.id,
-        });
          console.log(clients)
          clients.forEach(({socketId}) => {
             io.to(socketId).emit('joined',{
@@ -51,10 +49,14 @@ io.on('connection', (socket) => {
          
         })
 
-        socket.on('code-changed',({workspaceId,code}) => {
-            io.emit('code-changed',
-                {code}
-            )
+        socket.on('code-changed',({workspaceId,code,connectedClients}) => {
+           connectedClients.forEach(({socketId}) => {
+                if(socketId !== socket.id){
+                     io.to(socketId).emit('code-changed',{code})
+                }
+              
+           })
+            
           })
 
         socket.on('disconnecting' ,() => {

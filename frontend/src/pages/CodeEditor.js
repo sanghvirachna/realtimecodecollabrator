@@ -1,57 +1,34 @@
-import React, { useRef, useEffect,useState } from 'react'
-import CodeMirror from "react-codemirror";
-import './Workspace.css';
+import React, { useRef, useEffect ,useState} from 'react';
+import CodeMirror from 'react-codemirror';
 import 'codemirror/lib/codemirror.css';
 import 'codemirror/mode/javascript/javascript.js';
 import 'codemirror/theme/darcula.css';
 import 'codemirror/mode/python/python.js';
-import 'codemirror/mode/clike/clike.js'; // for Java and C++
+import 'codemirror/mode/clike/clike.js';
 import 'codemirror/addon/edit/closebrackets.js';
 
-
-const CodeEditor = ({ language,socket ,workspaceId }) => {
-  const [code, setCode] = useState("..");
+const CodeEditor = ({ language, socket, workspaceId ,connectedClients }) => {
   const editorRef = useRef(null);
-  //   useEffect(() => {
-  //     switch (language) {
-  //       case 'python':
-  //         setCode("print('Hello, world!')");
-  //         break;
-  //       case 'java':
-  //         setCode(
-  //           `public class Main {
-  //       public static void main(String[] args) {
-  //               // Your code goes here
-  //       }
-  // }`
-  //         );
-  //         break;
-  //       case 'cpp':
-  //         setCode(
-  //           `#include <iostream>
-  // using namespace std;
-  // int main() {
-  //    // Your code goes here
-  //    return 0;
-  // }`
-  //         );
-  //         break;
-  //       default:
-  //         setCode("");
-  //     }
-  //   }, [language]);
+  const [code, setCode] = useState(''); // Add this line
+  useEffect(() => {
+    console.log('Connected Clients changed:', connectedClients);
+    // Handle the updated connectedClients as needed
+    // For example, you can update the UI or perform other actions
+  }, [connectedClients]);
   useEffect(() => {
     console.log('Socket changed');
     if (socket) {
-      socket.on('code-changed', ({code}) => {
-        if(code != null){
-          console.log(code)
-          if(editorRef.current){
-            editorRef.current.getCodeMirror().setValue(code)
-          }
-          setCode(code)
+      socket.on('code-changed', ({ code }) => {
+        if (code != null && editorRef.current) {
+          // Get CodeMirror instance and setValue directly
+          const cmInstance = editorRef.current.getCodeMirror();
+          const cursorPos = cmInstance.getCursor();
+          cmInstance.setValue(code);
+          // Set cursor to the end of the content
+          cmInstance.setCursor(cursorPos);
+          setCode(code); // Add this line
+
         }
-       
       });
     }
   }, [socket]);
@@ -68,32 +45,35 @@ const CodeEditor = ({ language,socket ,workspaceId }) => {
         return 'python';
     }
   };
-  const handleEditorChange = (code) => {
-    if (socket) {
-      console.log('Socket is initialized');
-      if (socket.connected) {
-        console.log('Socket is connected');
-        console.log('Emitting code-changed event');
-        socket.emit('code-changed', {
-          workspaceId,code,
-        });
-      } else {
-        console.log('Socket is not connected');
-      }
-    } else {
-      console.log('Socket is not initialized');
+
+  const handleEditorChange = (newCode) => {
+    if (socket && socket.connected) {
+      console.log('Socket is connected');
+      console.log('Emitting code-changed event');
+      socket.emit('code-changed', {
+        workspaceId,
+        code: newCode,
+        connectedClients
+      });
+      setCode(code); // Add this line
+
     }
   };
   return (
     <div>
       <CodeMirror
         options={{
-          mode: getMode(language), theme: 'darcula', lineNumbers: true, autoCloseBrackets: true
-        }} ref={editorRef}   value={code}  onChange={handleEditorChange} 
+          mode: getMode(language),
+          theme: 'darcula',
+          lineNumbers: true,
+          autoCloseBrackets: true,
+        }}
+        value=".." // Initial value
+        ref={editorRef}
+        onChange={handleEditorChange}
       />
-
     </div>
-  )
-}
+  );
+};
 
-export default CodeEditor
+export default CodeEditor;
