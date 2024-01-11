@@ -19,7 +19,7 @@ compiler.init(options);
  }
 async function runCode(language, code, input) {
     return new Promise((resolve, reject) => {
-        var envData = { OS: "windows", cmd: "g++" }; // (uses g++ command to compile )
+        var envData = { OS: "windows",options:{timeout:1000}, cmd: "g++" }; // (uses g++ command to compile )
 
         if (language == "cpp") {
             compiler.compileCPPWithInput(envData, code, input, function (data) {
@@ -27,7 +27,7 @@ async function runCode(language, code, input) {
                     reject(data.error);
                 } else {
                     resolve(data);
-                    deleteFile();
+                    // deleteFile();
                 }
             });
         } else if (language == "java") {
@@ -37,7 +37,7 @@ async function runCode(language, code, input) {
                     reject(data.error);
                 } else {
                     resolve(data);
-                    deleteFile();
+                    // deleteFile();
                 }
             });
         } else {
@@ -47,7 +47,7 @@ async function runCode(language, code, input) {
                     reject(data.error);
                 } else {
                     resolve(data);
-                    deleteFile();   
+                    // deleteFile();   
                 }
             });
         }

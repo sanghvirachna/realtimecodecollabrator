@@ -7,16 +7,16 @@ import 'codemirror/mode/python/python.js';
 import 'codemirror/mode/clike/clike.js';
 import 'codemirror/addon/edit/closebrackets.js';
 
-const CodeEditor = ({ language, socket, workspaceId ,connectedClients }) => {
+const CodeEditor = ({ language, socket, workspaceId ,connectedClients ,onCodeChange}) => {
   const editorRef = useRef(null);
   const [code, setCode] = useState(''); // Add this line
   useEffect(() => {
-    console.log('Connected Clients changed:', connectedClients);
-    // Handle the updated connectedClients as needed
+    // console.log('Connected Clients changed:', connectedClients);
+    // // Handle the updated connectedClients as needed
     // For example, you can update the UI or perform other actions
   }, [connectedClients]);
   useEffect(() => {
-    console.log('Socket changed');
+    // console.log('Socket changed');
     if (socket) {
       socket.on('code-changed', ({ code }) => {
         if (code != null && editorRef.current) {
@@ -45,17 +45,17 @@ const CodeEditor = ({ language, socket, workspaceId ,connectedClients }) => {
         return 'python';
     }
   };
-
+  
   const handleEditorChange = (newCode) => {
     if (socket && socket.connected) {
-      console.log('Socket is connected');
-      console.log('Emitting code-changed event');
+      // console.log('Emitting code-changed event');
       socket.emit('code-changed', {
         workspaceId,
         code: newCode,
         connectedClients
       });
       setCode(code); // Add this line
+      onCodeChange(newCode); // Add this line
 
     }
   };
@@ -68,7 +68,7 @@ const CodeEditor = ({ language, socket, workspaceId ,connectedClients }) => {
           lineNumbers: true,
           autoCloseBrackets: true,
         }}
-        value=".." // Initial value
+        value=".." 
         ref={editorRef}
         onChange={handleEditorChange}
       />

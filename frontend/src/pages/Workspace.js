@@ -1,9 +1,9 @@
-import React, { useEffect ,useRef ,useState} from 'react'
-import { useLocation , useNavigate ,useParams } from 'react-router-dom';
+import React, { useEffect, useRef, useState } from 'react'
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import CodeEditor from './CodeEditor';
 import axios from 'axios';
 import Avatar from 'react-avatar';
-import  toast  from 'react-hot-toast'
+import toast from 'react-hot-toast'
 import { initSocket } from './socket';
 
 
@@ -16,46 +16,46 @@ const Workspace = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const workspaceId = useParams().id;
-  const [connectedClients,setConnectedClients] = useState([]);
+  const [connectedClients, setConnectedClients] = useState([]);
   const [socket, setSocket] = useState(null);  // Add this line
-  
+
   useEffect(() => {
-    
+
     const init = async () => {
       const handleErrors = (err) => {
         console.log(err)
         toast.error(err);
         navigate('/')
-       }
-       socketRef.current = await initSocket();
-       setSocket(socketRef.current)
-       socketRef.current.on('connect_error',(err) => handleErrors(err))
-       socketRef.current.on('connect_failed',(err) => handleErrors(err))
-       
+      }
+      socketRef.current = await initSocket();
+      setSocket(socketRef.current)
+      socketRef.current.on('connect_error', (err) => handleErrors(err))
+      socketRef.current.on('connect_failed', (err) => handleErrors(err))
 
-       
-       socketRef.current.emit('join', {
-         workspaceId,
-         username: location.state.username
-       })
-        socketRef.current.on('joined' ,({clients,username,socketId}) => {
-         if(username !== location.state.username){
-           toast.success(`${username} joined workspace`, {
-             position: "top-center"
-           })
-         }
-         setConnectedClients(clients)
-         console.log(clients)
-         
-        })
-       socketRef.current.on('disconnected',({socketId,username}) => {
+
+
+      socketRef.current.emit('join', {
+        workspaceId,
+        username: location.state.username
+      })
+      socketRef.current.on('joined', ({ clients, username, socketId }) => {
+        if (username !== location.state.username) {
+          toast.success(`${username} joined workspace`, {
+            position: "top-center"
+          })
+        }
+        setConnectedClients(clients)
+        console.log(clients)
+
+      })
+      socketRef.current.on('disconnected', ({ socketId, username }) => {
         toast.success(`${username} left workspace`, {
           position: "top-center"
         })
         setConnectedClients((prevClients) => {
           return prevClients.filter((client) => client.socketId !== socketId)
         })
-       })
+      })
     }
     init()
     // return () => {
@@ -63,8 +63,10 @@ const Workspace = () => {
     //   socketRef.current.off('disconnected')
     //   socketRef.current.disconnect()
     // }
- },[])
-
+  }, [])
+  const handleCodeChange = (newCode) => {
+    setCode(newCode);
+  };
 
   const handleSubmit = async () => {
     console.log(code)
@@ -85,13 +87,13 @@ const Workspace = () => {
   const handleLanguageChange = (e) => {
     setLanguage(e.target.value)
   }
-  console.log(language)
-  console.log(connectedClients)
+  // console.log(language)
+  // console.log(connectedClients)
 
   return (
     <>
-      
-      <CodeEditor language={language} socket={socket}  workspaceId={workspaceId}  connectedClients={connectedClients}/>
+
+      <CodeEditor language={language} socket={socket} workspaceId={workspaceId} connectedClients={connectedClients} onCodeChange={handleCodeChange} />
       {
         connectedClients.length > 0 && (
           connectedClients.map((client) => {
