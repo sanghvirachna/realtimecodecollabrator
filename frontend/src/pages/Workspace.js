@@ -8,6 +8,7 @@ import { initSocket } from './socket';
 
 
 const Workspace = () => {
+ 
   const [code, setCode] = useState("");
   const [output, setOutput] = useState("");
   const [language, setLanguage] = useState("python");
@@ -18,7 +19,20 @@ const Workspace = () => {
   const workspaceId = useParams().id;
   const [connectedClients, setConnectedClients] = useState([]);
   const [socket, setSocket] = useState(null);  // Add this line
-
+  const codeRef = useRef(null);
+  // console.log(connectedClients)
+   async function copyWorkspaceId(){
+    try{
+      await navigator.clipboard.writeText(workspaceId)
+      toast.success("Copied to clipboard") 
+    }catch(err){
+      console.log(err)
+      toast.error(err)
+    }
+  }
+  function leaveWorkspace(){
+    navigate('/')
+}
   useEffect(() => {
 
     const init = async () => {
@@ -45,10 +59,14 @@ const Workspace = () => {
           })
         }
         setConnectedClients(clients)
+        const autoCode = codeRef.current
+        const id = socketRef.current.id
+        socketRef.current.emit('code-sync',{autoCode,id,connectedClients})
         console.log(clients)
 
       })
       socketRef.current.on('disconnected', ({ socketId, username }) => {
+        console.log(username)
         toast.success(`${username} left workspace`, {
           position: "top-center"
         })
@@ -66,8 +84,12 @@ const Workspace = () => {
   }, [])
   const handleCodeChange = (newCode) => {
     setCode(newCode);
+      
   };
-
+ const handleAutoSync = (newAutoCode) => {
+    codeRef.current = newAutoCode
+ 
+ }
   const handleSubmit = async () => {
     console.log(code)
     const payload = {
@@ -93,7 +115,9 @@ const Workspace = () => {
   return (
     <>
 
-      <CodeEditor language={language} socket={socket} workspaceId={workspaceId} connectedClients={connectedClients} onCodeChange={handleCodeChange} />
+      <CodeEditor language={language} socket={socket} workspaceId={workspaceId} connectedClients={connectedClients} 
+      onCodeChange={handleCodeChange} 
+      onAutoSyncCode={handleAutoSync}/>
       {
         connectedClients.length > 0 && (
           connectedClients.map((client) => {
@@ -109,6 +133,8 @@ const Workspace = () => {
       <br></br>
       <input type="text" value={input} placeholder="Input" onChange={(e) => setInput(e.target.value)} />
       <button onClick={handleSubmit}>Run Code</button>
+      <button onClick={copyWorkspaceId}>Copy Workspace Id</button>
+      <button onClick={leaveWorkspace}>Leave Workspace</button>
       <p>{output.output}</p>
     </>
   );

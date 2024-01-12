@@ -50,6 +50,7 @@ io.on('connection', (socket) => {
         })
 
         socket.on('code-changed',({workspaceId,code,connectedClients}) => {
+            console.log(code)
            connectedClients.forEach(({socketId}) => {
                 if(socketId !== socket.id){
                      io.to(socketId).emit('code-changed',{code})
@@ -58,7 +59,13 @@ io.on('connection', (socket) => {
            })
             
           })
-
+        socket.on('code-sync',({autoCode,id,connectedClients}) => {
+            connectedClients.forEach(({socketId})=> {
+                if( id != socketId){
+                    io.to(socketId).emit('code-changed',{autoCode})
+                }
+            })
+        })
         socket.on('disconnecting' ,() => {
             const rooms = [...socket.rooms]
             rooms.forEach((roomId) => {
