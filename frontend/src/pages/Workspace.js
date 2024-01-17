@@ -5,7 +5,9 @@ import axios from 'axios';
 import Avatar from 'react-avatar';
 import toast from 'react-hot-toast'
 import { initSocket } from './socket';
-
+import Tooltip from '@material-ui/core/Tooltip';
+import Button from '@material-ui/core/Button';
+import FileCopyIcon from '@material-ui/icons/FileCopy';
 
 const Workspace = () => {
  
@@ -31,7 +33,16 @@ const Workspace = () => {
     }
   }
   function leaveWorkspace(){
+    if(socketRef.current){
+      socketRef.current.emit('leave',{
+        socketId:socketRef.current.id,
+        connectedClients
+      })
+    }
     navigate('/')
+}
+const resetCode = () => {
+  setCode("")
 }
   useEffect(() => {
 
@@ -114,7 +125,25 @@ const Workspace = () => {
 
   return (
     <>
-
+      <Button
+      variant="contained"
+      style={{ backgroundColor: 'red', color: 'white' }} // Setting background color to red
+      onClick={leaveWorkspace}
+    >
+      Leave Workspace
+    </Button>
+      
+      <Tooltip title="Copy Workspace ID" arrow>
+        <Button
+          variant="outlined"
+          color="primary"
+          startIcon={<FileCopyIcon />}
+          onClick={copyWorkspaceId}
+          className="copy-button"
+        >
+          Copy Workspace Id
+        </Button>
+      </Tooltip>
       <CodeEditor language={language} socket={socket} workspaceId={workspaceId} connectedClients={connectedClients} 
       onCodeChange={handleCodeChange} 
       onAutoSyncCode={handleAutoSync}/>
@@ -133,8 +162,7 @@ const Workspace = () => {
       <br></br>
       <input type="text" value={input} placeholder="Input" onChange={(e) => setInput(e.target.value)} />
       <button onClick={handleSubmit}>Run Code</button>
-      <button onClick={copyWorkspaceId}>Copy Workspace Id</button>
-      <button onClick={leaveWorkspace}>Leave Workspace</button>
+      <button onClick={resetCode}>Reset Code</button>
       <p>{output.output}</p>
     </>
   );

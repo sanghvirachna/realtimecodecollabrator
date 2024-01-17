@@ -66,6 +66,16 @@ io.on('connection', (socket) => {
                 }
             })
         })
+        socket.on('leave',({socketId,connectedClients}) => {
+            console.log(connectedClients)
+            connectedClients.forEach(({socketId: clientSocketId}) => {
+                if(socketId !== clientSocketId){
+                const disconnectedUser = connectedClients.find(user => user.socketId === socketId);
+
+                io.to(clientSocketId).emit('disconnected',{socketId,username:disconnectedUser.username})
+                }
+            })
+        })
         socket.on('disconnecting' ,() => {
             const rooms = [...socket.rooms]
             rooms.forEach((roomId) => {

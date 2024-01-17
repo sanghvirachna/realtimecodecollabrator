@@ -1,7 +1,7 @@
 import Workspace from './pages/Workspace';
-import Home from './pages/Home';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import {Toaster} from 'react-hot-toast'
+import Main from './pages/Main';
 
 
 function App() {
@@ -10,9 +10,8 @@ function App() {
       <Toaster/>
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<Home />} />
+          <Route path="/" element={<Main />} />
           <Route path="/workspace/:id" element={<Workspace />} />
-
         </Routes>
       </BrowserRouter>
     </>
