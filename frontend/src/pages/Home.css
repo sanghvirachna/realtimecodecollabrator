@@ -21,8 +21,7 @@ body {
   background-color: var(--bg);
   color: #fff;
   font-family: "Inter", "DM Sans", Arial, sans-serif;
-  text-align: center;
-  
+  /* text-align: center; */
 }
 
 *,
@@ -55,7 +54,7 @@ body {
 
 .about{
   margin-top:0px;
-  
+  text-align: center;
 }
 .logo{
   margin-top:0px;

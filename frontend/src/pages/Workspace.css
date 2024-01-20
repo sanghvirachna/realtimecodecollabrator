@@ -1,6 +1,9 @@
+
+.workspace{
+  height:auto;
+  width:100vw;
+ }
 .CodeMirror {
-    /* width:50vw;
-    height:100vh; */
     font-size: 1.3rem; /* Increase the font size */
     line-height: 1.2; /* Increase the line spacing */
   }

@@ -3,92 +3,83 @@ const cors = require('cors');
 const http = require('http');
 const { Server } = require("socket.io");
 const {runCode }= require('./runCode.js');
-const { connected } = require('process');
 
 const app = express();
 const server = http.createServer(app);
-const io  = new Server(server);
+const io  = new Server(server,{
+    cors: {
+        origin: "http://localhost:3000", // Replace with your frontend origin
+        methods: ["GET", "POST"]
+    }
+});
 
-const userMap ={}
-var clients ;
+let roomClients = {}; // Object to store clients in each room
+function getClientsInRoom(room) {
+    return roomClients[room] || [];
+}
+function getWorkspaceIdForSocket(socketId) {
+    for (let workspaceId in roomClients) {
+      if (roomClients[workspaceId].includes(socketId)) {
+        return workspaceId;
+      }
+    }
+    return null;
+  }
+let workspaces = {}; // Object to store the current code and language for each workspace
 
 app.use(cors())
 app.use(express.urlencoded({extended:true}));
 app.use(express.json());
 
-function getAllConnectedClients(workspaceId){
-    return Array.from(io.sockets.adapter.rooms.get(workspaceId) || []).map((socketId) => {
-        return {
-            socketId,
-            username: userMap[socketId]
+io.on('connection',(socket) => {
+   
+    console.log("Connection established");
+    console.log(socket.id);
+    socket.on('join', ({ username, workspaceId }) => {
+      
+        socket.join(workspaceId);
+        console.log(`${username} joined ${workspaceId}`);
+        if (!roomClients[workspaceId]) {
+            roomClients[workspaceId] = [];
         }
-    })
-}
-
-io.on('connection', (socket) => {
-    console.log("connected")
-    
-    socket.on('join', ({ workspaceId, username }) => {
-        // Check if the client is already connected to the workspace
-        if (Object.values(userMap).includes(username)) {
-            // console.log(`User ${username} is already connected`);
-            return;
+        roomClients[workspaceId].push(socket.id);
+        console.log(getClientsInRoom(workspaceId));
+        io.to(workspaceId).emit('joined', username);
+        if (!workspaces[workspaceId]) {
+            workspaces[workspaceId] = {
+              code: 'console.log("Hello, world!");',
+              language: 'javascript'
+            };
           }
-          // Log the joining and add the user to the userMap
-         userMap[socket.id] = username;
-         socket.join(workspaceId);
-        
-         
-         const clients = getAllConnectedClients(workspaceId);
-         console.log(clients)
-         clients.forEach(({socketId}) => {
-            io.to(socketId).emit('joined',{
-                clients,username,socketId:socket.id
-            })
-         })
-         
-        })
+        socket.emit('codeChange', workspaces[workspaceId].code);
+        socket.emit('languageChange', workspaces[workspaceId].language);
 
-        socket.on('code-changed',({workspaceId,code,connectedClients}) => {
-            console.log(code)
-           connectedClients.forEach(({socketId}) => {
-                if(socketId !== socket.id){
-                     io.to(socketId).emit('code-changed',{code})
-                }
-              
-           })
-            
-          })
-        socket.on('code-sync',({autoCode,id,connectedClients}) => {
-            connectedClients.forEach(({socketId})=> {
-                if( id != socketId){
-                    io.to(socketId).emit('code-changed',{autoCode})
-                }
-            })
-        })
-        socket.on('leave',({socketId,connectedClients}) => {
-            console.log(connectedClients)
-            connectedClients.forEach(({socketId: clientSocketId}) => {
-                if(socketId !== clientSocketId){
-                const disconnectedUser = connectedClients.find(user => user.socketId === socketId);
-
-                io.to(clientSocketId).emit('disconnected',{socketId,username:disconnectedUser.username})
-                }
-            })
-        })
-        socket.on('disconnecting' ,() => {
-            const rooms = [...socket.rooms]
-            rooms.forEach((roomId) => {
-              socket.in(roomId).emit('disconnected',{
-                socketId:socket.id,
-                username:userMap[socket.id]
-              })
-            })
-            delete userMap[socket.id];
-            socket.leave()
-          })
-          
+    });
+    socket.on('languageChange', (newLanguage) => {
+        const workspaceId = getWorkspaceIdForSocket(socket.id);
+        console.log('New language:', newLanguage, 'Workspace ID:', workspaceId); // Add this line
+       if(workspaces[workspaceId] ){
+        workspaces[workspaceId].language = newLanguage;
+       };
+        socket.to(workspaceId).emit('languageChange', newLanguage);
+      });
+    socket.on('leave', ({ username, workspaceId }) => {
+        socket.leave(workspaceId);
+        console.log(`${username} left ${workspaceId}`);
+        const index = roomClients[workspaceId].indexOf(socket.id);
+        if (index > -1) {
+          roomClients[workspaceId].splice(index, 1);
+        }
+        console.log(getClientsInRoom(workspaceId));
+        io.to(workspaceId).emit('left', username);
+      });
+      socket.on('codeChange', (newCode) => {
+        const workspaceId = getWorkspaceIdForSocket(socket.id);
+        currentCode = newCode; 
+        socket.to(workspaceId).emit('codeChange', newCode);
+      });
 })
+
 app.post('/run', async (req, res) => {
     try {
         const { language, code, input } = req.body;
