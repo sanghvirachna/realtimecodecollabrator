@@ -16,12 +16,13 @@
 body {
   background: linear-gradient(180deg, #020025 20%, #2e5fff 69%);
   min-height: 100vh;
+  
   display: grid;
   place-items: center;
   background-color: var(--bg);
   color: #fff;
   font-family: "Inter", "DM Sans", Arial, sans-serif;
-  /* text-align: center; */
+  width: 99vw;
 }
 
 *,
