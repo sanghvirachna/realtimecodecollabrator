@@ -1,41 +1,58 @@
-import React ,{useState} from 'react';
+import React, { useState } from 'react';
 import './TwoDivsComponent.css';
 import img from './images/finalb2.png';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import { useNavigate } from 'react-router-dom'
 import { v4 as uuidv4 } from 'uuid'
-import  toast  from 'react-hot-toast'
+import toast from 'react-hot-toast'
+import { makeStyles } from '@material-ui/core/styles';
 
 
 
 const TwoDivsComponent = () => {
   const navigate = useNavigate()
-    const [workspaceId, setWorkspaceId] = useState('')
-    const [username, setUsername] = useState('')
-    const generateWorkspaceId = () => {
-        const id = uuidv4()
-        setWorkspaceId(id)
-        toast.success('Workspace id generated', {
-            position: "top-center"
-          })
-     }
-    const joinWorkspace = (e) => {
-        e.preventDefault()
-        if (workspaceId === '' || username === '') {
-            toast.error('Please enter workspace id and username', {
-                position: "top-center"
-              })
-        } else {
-            navigate(`/workspace/${workspaceId}`,{
-                state:{
-                   workspaceId,
-                    username,
-                }
-            })
+  const [workspaceId, setWorkspaceId] = useState('')
+  const [username, setUsername] = useState('')
+  const generateWorkspaceId = () => {
+    const id = uuidv4()
+    setWorkspaceId(id)
+    toast.success('Workspace id generated', {
+      position: "top-center"
+    })
+  }
+  const joinWorkspace = (e) => {
+    e.preventDefault()
+    if (workspaceId === '' || username === '') {
+      toast.error('Please enter workspace id and username', {
+        position: "top-center"
+      })
+    } else {
+      navigate(`/workspace/${workspaceId}`, {
+        state: {
+          workspaceId,
+          username,
         }
+      })
     }
-    
+  }
+  const useStyles = makeStyles({
+    root: {
+      '& .MuiOutlinedInput-root': {
+        '& fieldset': {
+          borderColor: 'white', // Change this to your desired color
+        },
+        '&:hover fieldset': {
+          borderColor: 'white', // Change this to your desired color
+        },
+        '&.Mui-focused fieldset': {
+          borderColor: 'white', // Change this to your desired color
+        },
+      },
+    },
+  });
+  const classes = useStyles();
+
   return (
     <div className="main-container">
       <div className='grid-item-3'>
@@ -54,7 +71,7 @@ const TwoDivsComponent = () => {
             <img src="https://cdn-icons-png.flaticon.com/256/10841/10841416.png" alt="join"></img>
           </div>
           <div className='work'>
-            <h3>🚀 Execute your masterpiece.</h3>
+            <h3>🚀 Execute your masterpiece in real time.</h3>
             <img src="https://cdn-icons-png.flaticon.com/256/5958/5958810.png" alt="join"></img>
           </div>
           <div className='work'>
@@ -84,33 +101,33 @@ const TwoDivsComponent = () => {
         <div className="grid-item-2">
           <h3>Get started by joining Workspace</h3>
           <div className='input-box'>
-          <p>Create new <span onClick={generateWorkspaceId}>Workspace ID</span></p>
-          <TextField
-            label="Enter Workspace Id"
-            InputLabelProps={{ style: { color: 'white' } }}
-            variant="outlined"
-            className="input-field"
-            sx={{ marginBottom: 2,color:'black', backgroundColor: 'transparent', borderRadius: '8px' }}
-            value={workspaceId} onChange={(e) => setWorkspaceId(e.target.value)} 
-          />
-         
-          <TextField
-            label="Enter your Username"
-            InputLabelProps={{ style: { color: 'white' } }}
-            variant="outlined"
-            className="input-field"
-            sx={{ marginBottom: 2, backgroundColor: 'transparent', borderRadius: '8px' }}
-            value={username} onChange={(e) => setUsername(e.target.value)}
-          />
-          <Button
-            variant="contained"
-            color="primary"
-            className="submit-button"
-            sx={{ marginTop: 2, color: 'white', backgroundColor: 'blue', borderRadius: '8px' }}
-            onClick={joinWorkspace}
-          >
-            Join Workspace
-          </Button>
+            <p>Create new <span onClick={generateWorkspaceId}>Workspace ID</span></p>
+            <TextField
+              label="Enter Workspace Id"
+              InputLabelProps={{ style: { color: 'white' } }}
+              variant="outlined"
+              className={`${classes.root} input-field`}
+              sx={{ marginBottom: 2, color: 'black', backgroundColor: 'transparent', borderRadius: '8px' }}
+              value={workspaceId} onChange={(e) => setWorkspaceId(e.target.value)}
+            />
+
+            <TextField
+              label="Enter your Username"
+              InputLabelProps={{ style: { color: 'white' } }}
+              variant="outlined"
+              className={`${classes.root} input-field`}
+              sx={{ marginBottom: 2, backgroundColor: 'transparent', borderRadius: '8px' }}
+              value={username} onChange={(e) => setUsername(e.target.value)}
+            />
+            <Button
+              variant="contained"
+              color="primary"
+              className="submit-button"
+              sx={{ marginTop: 2, color: 'white', backgroundColor: 'blue', borderRadius: '8px' }}
+              onClick={joinWorkspace}
+            >
+              Join Workspace
+            </Button>
 
 
           </div>

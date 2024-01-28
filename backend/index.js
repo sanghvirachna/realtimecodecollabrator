@@ -94,6 +94,7 @@ app.post('/run', async (req, res) => {
   try {
     const { language, code, input } = req.body;
     const output = await runCode(language, code, input);
+    console.log(output);
     res.json({ language, code, output });
   } catch (error) {
     res.json({ message: error.message });

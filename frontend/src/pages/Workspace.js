@@ -24,6 +24,7 @@ import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 import RestoreIcon from '@mui/icons-material/Restore';
 import PeopleIcon from '@mui/icons-material/People';
 import Popover from '@mui/material/Popover';
+import axios from 'axios';
 
 const Workspace = () => {
   const navigate = useNavigate();
@@ -35,11 +36,13 @@ const Workspace = () => {
   const [users, setUsers] = useState([]);
   const [codeChanged, setCodeChanged] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
-
+  const [input, setInput] = useState('');
+  const [output, setOutput] = useState('');
+  
   useEffect(() => {
-    const socketIOClient = io('http://localhost:8080');
+    const socketIOClient = io(process.env.REACT_APP_API_URL);
     setSocket(socketIOClient);
-
+    console.log(process.env.REACT_APP_API_URL)
     // Emit 'join' event with username and workspaceId
     socketIOClient.emit('join', { username, workspaceId });
     socketIOClient.on('joined', (username) => {
@@ -113,7 +116,7 @@ const Workspace = () => {
     setCodeChanged(false);
     socket.emit('reset', defaultCode); // Emit 'reset' event
   };
-  
+
   const handleLanguageChange = (event) => {
     const language = event.target.value;
     let code;
@@ -148,114 +151,160 @@ const Workspace = () => {
 
   const open = Boolean(anchorEl);
   const id = open ? 'simple-popover' : undefined;
-
+  const handleRun = async () => {
+    try {
+      const response = await axios.post(`${process.env.REACT_APP_API_URL}/run`, {
+        code,
+        language: mode,
+        input,
+      });
+      console.log(response.data.output);
+      setOutput(response.data.output.output); // assuming the output is in response.data.output
+    } catch (error) {
+      console.error(error);
+      setOutput(error.toString()); // Display the error message in the output div
+    }
+  };
   return (
     <div className="workspace">
-      <select onChange={handleLanguageChange} value={mode}>
-        <option value="javascript">JavaScript</option>
-        <option value="python">Python</option>
-        <option value="java">Java</option>
-        <option value="c++">C++</option>
-      </select>
-      <div className="avatars">
-        {users.map(user => (
-          <Avatar key={user} name={user} size="40" round={true} />
-        ))}
-      </div>
-      <Button
-        variant="contained"
-        style={{ backgroundColor: 'red', color: 'white' }}
-        onClick={() => {
-          socket.emit('leave', { username, workspaceId });
-          navigate('/')
-        }}
-      >
-        Leave Workspace
-      </Button>
-
-      <Tooltip title="Copy Workspace ID" arrow>
-        <Button
-          variant="outlined"
-          color="primary"
-          startIcon={<FileCopyIcon />}
-          onClick={() => {
-            navigator.clipboard.writeText(workspaceId)
-              .then(() => {
-                toast.success('Workspace ID copied to clipboard', {
-                  position: "top-center"
-                });
-              })
-              .catch(err => console.error('Could not copy text: ', err));
-          }}
-          className="copy-button"
-        >
-          Copy Workspace Id
-        </Button>
-      </Tooltip>
-      <CodeMirror
-        value={code}
-        options={{
-          lineNumbers: true,
-          theme: 'blackboard',
-          mode: mode === 'java' ? 'text/x-java' : mode === 'c++' ? 'text/x-c++src' : mode,
-          extraKeys: { 'Ctrl-Space': 'autocomplete' },
-          foldGutter: true,
-          gutters: ["CodeMirror-linenumbers", "CodeMirror-foldgutter"],
-
-        }}
-        onBeforeChange={(editor, data, value) => {
-          setCode(value);
-          setCodeChanged(true);
-          socket.emit('codeChange', value);
-        }}
-      />
-      <Button
-        variant="outlined"
-        color="primary"
-        style={{ borderColor: 'green', color: 'white',backgroundColor:'green' }}
-        onClick={''}
-      >
-        <IconButton color="primary">
-          <PlayArrowIcon style={{ color: 'white' }} />
-        </IconButton>
-        <Typography variant="button">Run</Typography>
-      </Button>
-      <Tooltip title="Reset" arrow>
-      <IconButton onClick={handleReset}>
-        <RestoreIcon style={{ color: 'grey' }}  />
-      </IconButton>
-    </Tooltip>
-    <Button
-      variant="contained"
-      style={{ backgroundColor: '#8BC34A', color: 'white' }} // Light green color
-      startIcon={<PeopleIcon />}
-      onClick={handleClick}
-    >
-     {users.length} {/*  {numberOfCollaborators > 0 && <span>({numberOfCollaborators})</span>} */}
-    </Button>
-    <Popover
-        id={id}
-        open={open}
-        anchorEl={anchorEl}
-        onClose={handleClose}
-        anchorOrigin={{
-          vertical: 'bottom',
-          horizontal: 'center',
-        }}
-        transformOrigin={{
-          vertical: 'top',
-          horizontal: 'center',
-        }}
-      >
-        <div style={{ padding: '10px' }}>
-          {users.map(user => (
-            <div key={user}>
-              <Avatar name={user} size="40" round={true} />
-              <span>{user}</span>
-            </div>
-          ))}
+      <div className='navbar'>
+        <div className="logo">CollabCode</div>
+        <div className='buttons'>
+          <Tooltip title="Copy Workspace ID" arrow>
+            <Button
+              variant="outlined"
+              color="primary"
+              startIcon={<FileCopyIcon />}
+              onClick={() => {
+                navigator.clipboard.writeText(workspaceId)
+                  .then(() => {
+                    toast.success('Workspace ID copied to clipboard', {
+                      position: "top-center"
+                    });
+                  })
+                  .catch(err => console.error('Could not copy text: ', err));
+              }}
+              className="copy-button"
+            >
+              Copy Workspace Id
+            </Button>
+          </Tooltip>
+          <Button
+            variant="contained"
+            style={{ backgroundColor: 'red', color: 'white' }}
+            onClick={() => {
+              socket.emit('leave', { username, workspaceId });
+              navigate('/')
+            }}
+          >
+            Leave Workspace
+          </Button>
         </div>
-      </Popover>
+        <div className='users'>
+          <div className="avatars">
+            {users.map(user => (
+              <Avatar key={user} name={user} size="50" round={true} />
+            ))}
+          </div>
+          <Button
+            variant="contained"
+            style={{ backgroundColor: '#8BC34A', color: 'white' }} // Light green color
+            startIcon={<PeopleIcon />}
+            onClick={handleClick}
+          >
+            {users.length} {/*  {numberOfCollaborators > 0 && <span>({numberOfCollaborators})</span>} */}
+          </Button>
+          <Popover
+            id={id}
+            open={open}
+            anchorEl={anchorEl}
+            onClose={handleClose}
+            anchorOrigin={{
+              vertical: 'bottom',
+              horizontal: 'center',
+            }}
+            transformOrigin={{
+              vertical: 'top',
+              horizontal: 'center',
+            }}
+          >
+            <div style={{ padding: '10px' }}>
+              {users.map(user => (
+                <div key={user} style={{ paddingBottom: '3px' }}>
+                  <Avatar name={user} size="50" round={true} />
+                  <span style={{ fontSize: 'larger', paddingLeft: '10px', paddingRight: '10px' }}>{user}</span>
+                </div>
+              ))}
+            </div>
+          </Popover>
+        </div>
+      </div>
+      <div className='workspace-area'>
+        <div className='codeeditor'>
+          <CodeMirror
+            value={code}
+            options={{
+              lineNumbers: true,
+              theme: 'blackboard',
+              mode: mode === 'java' ? 'text/x-java' : mode === 'c++' ? 'text/x-c++src' : mode,
+              extraKeys: { 'Ctrl-Space': 'autocomplete' },
+              foldGutter: true,
+              gutters: ["CodeMirror-linenumbers", "CodeMirror-foldgutter"],
+
+            }}
+            onBeforeChange={(editor, data, value) => {
+              setCode(value);
+              setCodeChanged(true);
+              socket.emit('codeChange', value);
+            }}
+          />
+          <div className='editor-buttons'>
+            <Tooltip title="Reset" arrow>
+              <IconButton onClick={handleReset}>
+                <RestoreIcon style={{ color: 'grey',marginRight:'1rem' }} />
+              </IconButton>
+            </Tooltip>
+
+            <select onChange={handleLanguageChange} value={mode}>
+              <option value="javascript">JavaScript</option>
+              <option value="python">Python</option>
+              <option value="java">Java</option>
+              <option value="c++">C++</option>
+            </select>
+            <Button
+              variant="outlined"
+              color="primary"
+              style={{ borderColor: 'green', color: 'white', backgroundColor: 'green' }}
+              onClick={handleRun}
+            >
+              <IconButton color="primary">
+                <PlayArrowIcon style={{ color: 'white' }} />
+              </IconButton>
+              <Typography variant="button">Run Code</Typography>
+            </Button>
+            <div className='output'>
+              <input
+                type="text"
+                value={input}
+                onChange={event => setInput(event.target.value)}
+                placeholder="Enter input here"
+              />
+              <div className='output-box'>{output}</div>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+
+
+
+
+
+
+
+
+
     </div>
   );
 };

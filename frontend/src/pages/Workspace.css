@@ -1,10 +1,111 @@
-
 .workspace{
   height:auto;
-  width:90vw;
+  width:100vw;
  }
-.CodeMirror {
-    font-size: 1.3rem; /* Increase the font size */
-    line-height: 1.2; /* Increase the line spacing */
-    width:100%;
+  .navbar{
+    width:100vw;
+    height:auto;
+    display: flex;
+    flex-direction: row;
   }
+  .logo{
+    margin-top:0px;
+    font-family: 'Teko', sans-serif;
+    font-size: 2.5rem;
+    margin-bottom:1rem;
+    font-weight: 800;
+    color:rgb(228, 246, 246);
+    text-align: left;
+    padding:2rem 0rem 0rem 4rem !important;
+  }
+  .buttons{
+   
+    color:rgb(228, 246, 246);
+    align-self: center;
+   
+    margin:0 auto;
+  }
+  .buttons button {
+    margin-right: 1rem; /* Add right margin to all buttons */
+    margin-left: 0rem; /* Add right margin to all buttons */
+  }
+  
+  .buttons button:last-child {
+    margin-right: 0; /* Remove right margin from the last button */
+  }
+  .users{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    margin-right:2rem;
+  }
+  .avatars{
+    margin-right:1rem;
+  }
+  .workspace-area{
+    width:100vw;
+    display: flex;
+    flex-direction: row;
+    margin-top: 5rem;
+    height: 80vh;
+  }
+  .codeeditor{
+    width:80%;
+    position: relative;
+    flex-grow: 1; /* Add this */
+  display: flex; /* Add this */
+  flex-direction: column; 
+  height:100%;
+  }
+.CodeMirror {
+  font-size: 1.3rem; /* Increase the font size */
+  line-height: 1.2; /* Increase the line spacing */
+  height: 750px;
+}
+.editor-buttons {
+  position: absolute;
+  top: 0;
+  right: 1rem;
+}
+.editor-buttons select{
+  background-color: transparent;
+  color: white;
+  padding: 0.5rem 1rem;
+  border-radius: 10px;
+  font-size: 1rem;
+  margin-right:1rem;
+}
+.editor-buttons select option{
+  background-color: transparent;
+  color: black;
+  padding: 0.5rem 1rem;
+  border-radius: 10px;
+  font-size: 1rem;
+}
+.output{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding:1rem 0rem;
+  
+}
+.output input{
+  width:90%;
+  background-color: transparent;
+  font-size: 1.2rem;
+  padding: 0.5rem 0rem 0.7rem 1rem; 
+  text-align: start;
+  color:rgba(0,0,0,0.9);
+  
+}
+.output-box{
+  margin-top: 2rem;
+  width:90%;
+  height: 400px;
+  background-color: transparent;
+  color: white;
+  font-size: 1.3rem;
+  border-radius: 10px;
+  padding: 0.5rem 0rem 0.7rem 1rem;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}

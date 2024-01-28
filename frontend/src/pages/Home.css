@@ -16,9 +16,8 @@
 body {
   background: linear-gradient(180deg, #020025 20%, #2e5fff 69%);
   min-height: 100vh;
-  
-  display: grid;
-  place-items: center;
+  /* display: grid;
+  place-items: center; */
   background-color: var(--bg);
   color: #fff;
   font-family: "Inter", "DM Sans", Arial, sans-serif;
@@ -236,11 +235,7 @@ body {
   .title {
     font-size: 2rem;
   }
-  .logo{
-    margin:2vh;
-   
-
-  }
+  
   .logo{
     margin-top:0px;
     margin-bottom:1rem;

@@ -29,6 +29,7 @@
     justify-content: center;
     align-items: center;
   }
+  
   .grid-item-3{
     width:100%;
     display: flex;
@@ -115,6 +116,7 @@
     box-sizing: border-box;
     padding-top:0px;
   }
+  
   .second-container{
     flex-direction: column-reverse;
   }
@@ -133,6 +135,10 @@
       flex-direction: column;
       align-items: center;
       
+    }
+    .grid-item-2  p{
+      text-align: center;
+     
     }
     .main-image{
       height:90%;
