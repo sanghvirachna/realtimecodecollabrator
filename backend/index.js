@@ -3,8 +3,9 @@ const cors = require('cors');
 const http = require('http');
 const { Server } = require("socket.io");
 const { runCode } = require('./runCode.js');
-
+const path = require('path');
 const app = express();
+app.use(express.static(path.join(__dirname, 'build')));
 const server = http.createServer(app);
 const io = new Server(server, {
   cors: {
@@ -89,6 +90,10 @@ io.on('connection', (socket) => {
     socket.to(workspaceId).emit('codeChange', defaultCode);
   });
 })
+
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, 'build', 'index.html'));
+});
 
 app.post('/run', async (req, res) => {
   try {
