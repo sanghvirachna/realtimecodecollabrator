@@ -5,7 +5,7 @@ const { Server } = require("socket.io");
 const { runCode } = require('./runCode.js');
 const path = require('path');
 const app = express();
-app.use(express.static(path.join(__dirname, 'build')));
+
 const server = http.createServer(app);
 const io = new Server(server, {
   cors: {
@@ -31,6 +31,7 @@ let workspaces = {}; // Object to store the current code and language for each w
 app.use(cors())
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
+app.use(express.static(path.resolve(__dirname, 'build')));
 
 io.on('connection', (socket) => {
 
@@ -43,9 +44,11 @@ io.on('connection', (socket) => {
     if (!roomClients[workspaceId]) {
       roomClients[workspaceId] = [];
     }
-    roomClients[workspaceId].push({ socketId: socket.id, username });
-    console.log(getClientsInRoom(workspaceId));
-    io.to(workspaceId).emit('joined', username);
+    if (!roomClients[workspaceId].some(client => client.username === username)) {
+      roomClients[workspaceId].push({ socketId: socket.id, username });
+      console.log(getClientsInRoom(workspaceId));
+      io.to(workspaceId).emit('joined', username);
+    }
     socket.emit('currentUsers', getClientsInRoom(workspaceId).map(client => client.username));
     if (!workspaces[workspaceId]) {
       workspaces[workspaceId] = {
@@ -77,10 +80,7 @@ io.on('connection', (socket) => {
     currentCode = newCode;
     socket.to(workspaceId).emit('codeChange', newCode);
   });
-  socket.on('cursorChange', ({ username, cursor }) => {
-    const workspaceId = getWorkspaceIdForSocket(socket.id);
-    socket.broadcast.to(workspaceId).emit('cursorChange', { username, cursor });
-  });
+  
   // Listen for the 'reset' event
   socket.on('reset', (defaultCode) => {
     const workspaceId = getWorkspaceIdForSocket(socket.id);
@@ -91,13 +91,12 @@ io.on('connection', (socket) => {
   });
 })
 
-app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, 'build', 'index.html'));
-});
 
+app.get('*', (req, res) => res.sendFile(path.resolve('build', 'index.html')));
 app.post('/run', async (req, res) => {
   try {
     const { language, code, input } = req.body;
+    console.log(language)
     const output = await runCode(language, code, input);
     console.log(output);
     res.json({ language, code, output });

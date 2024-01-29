@@ -237,11 +237,11 @@ body {
   }
   
   .logo{
-    margin-top:0px;
-    margin-bottom:1rem;
-    font-size: 2rem;
-    padding:2rem 0rem 0rem 0rem;
+    font-size: 2.5rem;
     text-align: center;
+  }
+  .docs{
+    text-align: right;
   }
   .about{
     margin-top:0px;

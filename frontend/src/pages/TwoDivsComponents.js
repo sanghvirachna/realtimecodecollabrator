@@ -104,7 +104,8 @@ const TwoDivsComponent = () => {
             <p>Create new <span onClick={generateWorkspaceId}>Workspace ID</span></p>
             <TextField
               label="Enter Workspace Id"
-              InputLabelProps={{ style: { color: 'white' } }}
+              InputLabelProps={{ style: { color: 'white', fontWeight: 'medium', fontFamily: 'Poppins' } }}
+              InputProps={{ style: { color: 'white', fontWeight: 'medium', fontFamily: 'Poppins' } }}
               variant="outlined"
               className={`${classes.root} input-field`}
               sx={{ marginBottom: 2, color: 'black', backgroundColor: 'transparent', borderRadius: '8px' }}
@@ -113,17 +114,19 @@ const TwoDivsComponent = () => {
 
             <TextField
               label="Enter your Username"
-              InputLabelProps={{ style: { color: 'white' } }}
+              InputLabelProps={{ style: { color: 'white', fontWeight: 'medium', fontFamily: 'Poppins' } }}
+              InputProps={{ style: { color: 'white', fontWeight: 'medium', fontFamily: 'Poppins' } }}
               variant="outlined"
               className={`${classes.root} input-field`}
               sx={{ marginBottom: 2, backgroundColor: 'transparent', borderRadius: '8px' }}
               value={username} onChange={(e) => setUsername(e.target.value)}
             />
+            <a style={{ textAlign: 'center', textDecoration: 'underline', cursor: 'pointer' }} href="https://github.com/sanghvirachna/realtimecodecollabrator/blob/main/README.md" target='_blank'>Learn more about it</a>
             <Button
               variant="contained"
               color="primary"
               className="submit-button"
-              sx={{ marginTop: 2, color: 'white', backgroundColor: 'blue', borderRadius: '8px' }}
+              sx={{ marginTop: 2, color: 'white', backgroundColor: 'blue', borderRadius: '8px', fontWeight: 'bold' }}
               onClick={joinWorkspace}
             >
               Join Workspace

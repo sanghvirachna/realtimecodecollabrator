@@ -7,27 +7,21 @@ compiler.init(options);
 
  const temp = path.join(__dirname, 'temp');
 
- const deleteFile = async () => {
-    fs.readdir(temp , (err,files) =>{
-        if(err) throw err;
-        for(const file of files){
-                fs.unlink(path.join(temp,file), err =>{
-                        if(err) throw err;
-                });
-        }
- })
- }
+
 async function runCode(language, code, input) {
     return new Promise((resolve, reject) => {
         var envData = { OS: "windows",options:{timeout:1000}, cmd: "g++" }; // (uses g++ command to compile )
 
-        if (language == "cpp") {
+        if (language == "c++" || language == "c") {
+            if(input==""){
+                input = "0";
+            }
             compiler.compileCPPWithInput(envData, code, input, function (data) {
                 if (data.error) {
                     reject(data.error);
                 } else {
                     resolve(data);
-                    // deleteFile();
+                   
                 }
             });
         } else if (language == "java") {
@@ -37,17 +31,35 @@ async function runCode(language, code, input) {
                     reject(data.error);
                 } else {
                     resolve(data);
-                    // deleteFile();
+                    
                 }
             });
-        } else {
+        } else if (language == "csharp") {
+            envData = { OS: "windows" };
+            compiler.compileCSWithInput(envData, code, input, function (data) {
+                if (data.error) {
+                    reject(data.error);
+                } else {
+                    resolve(data);
+                }
+            });
+        } else if (language == "visualbasic") {
+            envData = { OS: "windows" };
+            compiler.compileVBWithInput(envData, code, input, function (data) {
+                if (data.error) {
+                    reject(data.error);
+                } else {
+                    resolve(data);
+                }
+            });
+        }else {
             envData = { OS: "windows" };
             compiler.compilePythonWithInput(envData, code, input, function (data) {
                 if (data.error) {
                     reject(data.error);
                 } else {
                     resolve(data);
-                    // deleteFile();   
+                    
                 }
             });
         }

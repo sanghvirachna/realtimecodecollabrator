@@ -11,6 +11,8 @@ import "codemirror/addon/fold/foldgutter.css";
 import "codemirror/addon/fold/foldgutter";
 import "codemirror/addon/fold/brace-fold";
 import 'codemirror/theme/blackboard.css';
+import 'codemirror/keymap/sublime';
+
 import Button from '@material-ui/core/Button';
 import FileCopyIcon from '@material-ui/icons/FileCopy';
 import Tooltip from '@material-ui/core/Tooltip';
@@ -25,20 +27,33 @@ import RestoreIcon from '@mui/icons-material/Restore';
 import PeopleIcon from '@mui/icons-material/People';
 import Popover from '@mui/material/Popover';
 import axios from 'axios';
+import 'codemirror/addon/search/search';
+import 'codemirror/addon/dialog/dialog';
+
 
 const Workspace = () => {
   const navigate = useNavigate();
   const [socket, setSocket] = useState(null);
   const location = useLocation();
-  const [code, setCode] = useState('console.log("Hello, world!");');
-  const [mode, setMode] = useState('javascript');
+  const [code, setCode] = useState('');
+  const [mode, setMode] = useState('c');
   const { workspaceId, username } = location.state;
   const [users, setUsers] = useState([]);
   const [codeChanged, setCodeChanged] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
   const [input, setInput] = useState('');
   const [output, setOutput] = useState('');
-  
+  const [showMessage, setShowMessage] = useState(false);
+
+  useEffect(() => {
+    if (window.innerWidth <= 768) {
+      setShowMessage(true);
+      setTimeout(() => {
+        setShowMessage(false);
+      }, 3000);
+    }
+  }, []);
+
   useEffect(() => {
     const socketIOClient = io(process.env.REACT_APP_API_URL);
     setSocket(socketIOClient);
@@ -75,8 +90,8 @@ const Workspace = () => {
   useEffect(() => {
     if (!codeChanged) {
       switch (mode) {
-        case 'javascript':
-          setCode('console.log("Hello, world!");');
+        case 'c':
+          setCode('#include <stdio.h>\n\nint main() {\n  printf("Hello, world!");\n  return 0;\n}');
           break;
         case 'python':
           setCode('print("Hello, world!")');
@@ -97,8 +112,8 @@ const Workspace = () => {
   const handleReset = () => {
     let defaultCode;
     switch (mode) {
-      case 'javascript':
-        defaultCode = 'console.log("Hello, world!");';
+      case 'c':
+        defaultCode = '#include <stdio.h>\n\nint main() {\n  printf("Hello, world!");\n  return 0;\n}';
         break;
       case 'python':
         defaultCode = 'print("Hello, world!")';
@@ -121,8 +136,8 @@ const Workspace = () => {
     const language = event.target.value;
     let code;
     switch (language) {
-      case 'javascript':
-        code = 'console.log("Hello, world!");';
+      case 'c':
+        code = '#include <stdio.h>\n\nint main() {\n  printf("Hello, world!");\n  return 0;\n}';
         break;
       case 'python':
         code = 'print("Hello, world!")';
@@ -167,6 +182,11 @@ const Workspace = () => {
   };
   return (
     <div className="workspace">
+      {showMessage && (
+        <div className="mobile-message">
+          Use desktop for better and all functionalities.
+        </div>
+      )}
       <div className='navbar'>
         <div className="logo">CollabCode</div>
         <div className='buttons'>
@@ -246,11 +266,12 @@ const Workspace = () => {
             options={{
               lineNumbers: true,
               theme: 'blackboard',
-              mode: mode === 'java' ? 'text/x-java' : mode === 'c++' ? 'text/x-c++src' : mode,
-              extraKeys: { 'Ctrl-Space': 'autocomplete' },
+              mode: mode === 'java' ? 'text/x-java' : mode === 'c++' ? 'text/x-c++src' : mode === 'c' ? 'text/x-csrc' : mode,
+              extraKeys: { 'Ctrl-F': 'findPersistent','Alt-Up': 'swapLineUp',
+              'Alt-Down': 'swapLineDown', },
               foldGutter: true,
               gutters: ["CodeMirror-linenumbers", "CodeMirror-foldgutter"],
-
+              
             }}
             onBeforeChange={(editor, data, value) => {
               setCode(value);
@@ -261,12 +282,12 @@ const Workspace = () => {
           <div className='editor-buttons'>
             <Tooltip title="Reset" arrow>
               <IconButton onClick={handleReset}>
-                <RestoreIcon style={{ color: 'grey',marginRight:'1rem' }} />
+                <RestoreIcon style={{ color: 'grey', marginRight: '1rem' }} />
               </IconButton>
             </Tooltip>
 
             <select onChange={handleLanguageChange} value={mode}>
-              <option value="javascript">JavaScript</option>
+              <option value="c">C</option>
               <option value="python">Python</option>
               <option value="java">Java</option>
               <option value="c++">C++</option>

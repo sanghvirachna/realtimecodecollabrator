@@ -93,9 +93,20 @@
     font-size: 1.2rem;
     padding-bottom: 1rem;
   }
-  .input-box p span{
-    text-decoration: underline;
+  .input-box p  span{
+      
+  
+    border-radius: 5px;
+    padding:0.2rem;
+    color:#09f120;
+    cursor: pointer;
+    font-size:1.2rem;
+    
+    font-weight: bold;
+    font-family: 'Poppins', sans-serif;
+    
   }
+  
   .input-field{
     width:60%;
     align-self: center;
@@ -154,6 +165,10 @@
       width:80%;
   
     }
+    .input-box{
+      width:90%;
+      margin-bottom: 2rem;
+    }
     .input-box p{
       width:80%;
       align-self: center;
@@ -162,6 +177,7 @@
       font-size: 1rem;
       padding-bottom: 1rem;
     }
+    
     .submit-button{
       width:50%;
       font-weight: bold;
@@ -202,6 +218,17 @@
      font-weight:400;
      font-size: 1.2rem;
     }
+    .input-box p  span{
+      
+      
+      padding:0.1rem 0rem;
+      
+      font-size:1rem;
+      margin-left: 0rem;
+      font-weight: bold;
+      
+    }
+    
     
 }
   
