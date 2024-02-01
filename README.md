@@ -5,7 +5,7 @@ Welcome to our Real-Time Code Collaborator project! This platform is meticulousl
 ## Features 🌟
 
 - **Real-Time Collaboration:** Work concurrently with multiple developers, witnessing changes in real-time.
-- **Multi-Language Support:** Code in your preferred language with support for C++, Java, Python, and more.
+- **Multi-Language Support:** Code in your preferred language with support for C, C++, Java and Python.
 - **MERN Stack Architecture:** Harnessing the power of MongoDB, Express.js, React.js, and Node.js for a robust and scalable application.
 
 ## Technologies Used 🛠️
