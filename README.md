@@ -45,8 +45,6 @@ npm start
 - Python
 Feel free to contribute and expand the language support to make our platform even more versatile!
 
-### P.S. This is still under construction.Track recent progress at [https://frontend-lovat-rho-63.vercel.app/](https://frontend-lovat-rho-63.vercel.app/)
-
 ### Contributing 🤝
 We welcome contributions from the community! Whether it's bug fixes, feature enhancements, or language support additions, your input is valuable. Please refer to our Contribution Guidelines for more details.
 
