@@ -4,10 +4,10 @@ Welcome to our Real-Time Code Collaborator project! This platform is meticulousl
 
 ## This is how it looks
 ### Home Page🏠
-<img src="./HomePage.png" alt="Home Page" height="400"/>
+<img src="./HomePage.png" alt="Home Page"/>
 
 ### Workspace Page💻
-<img src="./WorkspacePage.png" alt="Workspace Page" height="400"/>
+<img src="./WorkspacePage.png" alt="Workspace Page" />
 
 
 ### Live Demo : https://realtimecodecollabarator.onrender.com/
