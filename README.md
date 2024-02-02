@@ -1,12 +1,13 @@
 # CollabCode - Real-Time Code Collaborator 🚀
 
-Welcome to our Real-Time Code Collaborator project! This platform is meticulously designed to empower developers worldwide, facilitating collaborative coding in real-time. It's a space that nurtures seamless teamwork and accelerates the entire development process.
+Welcome to our Real-Time Code Collaborator project! This platform is meticulously designed to empower developers worldwide, facilitating collaborative coding in real-time and running the code. It's a space that nurtures seamless teamwork and accelerates the entire development process.
 ### Live Demo : https://realtimecodecollabarator.onrender.com/
 ## Features 🌟
 
 - **Real-Time Collaboration:** Work concurrently with multiple developers, witnessing changes in real-time.
 - **Multi-Language Support:** Code in your preferred language with support for C, C++, Java and Python.
-- **MERN Stack Architecture:** Harnessing the power of MongoDB, Express.js, React.js, and Node.js for a robust and scalable application.
+- **Run Code:** Run the code in the same environment.
+- **Rich Code Editor Features** Harnessing the power of CodeMirror, it has features of syntax highlighting for multiple languages, search and find code using (Ctrl + F )shortcut,  move your code line up-down using (Alt + up/down) arrow, code wrapper,etc.
 
 ## Technologies Used 🛠️
 
@@ -17,12 +18,12 @@ Welcome to our Real-Time Code Collaborator project! This platform is meticulousl
 
 1. **Clone the Repository:**
    ```bash
-   git clone https://github.com/your-username/real-time-code-collaborator.git
-   cd real-time-code-collaborator
+   git clone https://github.com/your-username/realtimecodecollaborator.git
+   cd realtimecodecollaborator
    ```
 2.**Install Dependencies:**
 ```bash
-cd client && npm install && cd ../server && npm install
+cd frontend && npm install && cd ../backend && npm install
 ```
 3.**Configure Environment Variables:**
 
@@ -30,7 +31,7 @@ cd client && npm install && cd ../server && npm install
 4.**Run the Application:**
 ```bash
 # In the server directory
-npm start
+npm run server
 
 # In the client directory
 npm start
@@ -40,6 +41,7 @@ npm start
 
 ## Language Support 🌐
 ####  Our platform currently supports the following languages:
+- C
 - C++
 - Java
 - Python
