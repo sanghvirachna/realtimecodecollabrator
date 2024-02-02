@@ -71,11 +71,11 @@ const TwoDivsComponent = () => {
             <img src="https://cdn-icons-png.flaticon.com/256/10841/10841416.png" alt="join"></img>
           </div>
           <div className='work'>
-            <h3>🚀 Execute your masterpiece in real time.</h3>
+            <h3>🚀 Execute your masterpiece.</h3>
             <img src="https://cdn-icons-png.flaticon.com/256/5958/5958810.png" alt="join"></img>
           </div>
           <div className='work'>
-            <h3>📈 Increased Productivity, Happy Coding.</h3>
+            <h3>📈 Boost your Efficiency</h3>
             <img src="https://cdn-icons-png.flaticon.com/256/1457/1457898.png" alt="join"></img>
           </div>
         </div>
@@ -86,7 +86,7 @@ const TwoDivsComponent = () => {
           <div className="image-text-box">
             <img
               src={img}
-              alt="Your Image"
+              alt="A person coding"
               className="main-image"
             />
             <h3>
@@ -121,7 +121,7 @@ const TwoDivsComponent = () => {
               sx={{ marginBottom: 2, backgroundColor: 'transparent', borderRadius: '8px' }}
               value={username} onChange={(e) => setUsername(e.target.value)}
             />
-            <a style={{ textAlign: 'center', textDecoration: 'underline', cursor: 'pointer' }} href="https://github.com/sanghvirachna/realtimecodecollabrator/blob/main/README.md" target='_blank'>Learn more about it</a>
+            <a style={{ textAlign: 'center', textDecoration: 'underline', cursor: 'pointer' }} href="https://github.com/sanghvirachna/realtimecodecollabrator/blob/main/README.md" target='_blank' rel="noreferrer">Learn more about it</a>
             <Button
               variant="contained"
               color="primary"

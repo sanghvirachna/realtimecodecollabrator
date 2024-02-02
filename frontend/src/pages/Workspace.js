@@ -12,7 +12,6 @@ import "codemirror/addon/fold/foldgutter";
 import "codemirror/addon/fold/brace-fold";
 import 'codemirror/theme/blackboard.css';
 import 'codemirror/keymap/sublime';
-
 import Button from '@material-ui/core/Button';
 import FileCopyIcon from '@material-ui/icons/FileCopy';
 import Tooltip from '@material-ui/core/Tooltip';
@@ -55,9 +54,9 @@ const Workspace = () => {
   }, []);
 
   useEffect(() => {
-    const socketIOClient = io(process.env.REACT_APP_API_URL);
+    const socketIOClient = io("https://realtimecodecollabarator.onrender.com/");
     setSocket(socketIOClient);
-    console.log(process.env.REACT_APP_API_URL)
+   
     // Emit 'join' event with username and workspaceId
     socketIOClient.emit('join', { username, workspaceId });
     socketIOClient.on('joined', (username) => {
@@ -108,7 +107,6 @@ const Workspace = () => {
     }
   }, [mode, codeChanged])
 
-  console.log(code);
   const handleReset = () => {
     let defaultCode;
     switch (mode) {
@@ -168,15 +166,13 @@ const Workspace = () => {
   const id = open ? 'simple-popover' : undefined;
   const handleRun = async () => {
     try {
-      const response = await axios.post(`${process.env.REACT_APP_API_URL}/run`, {
+      const response = await axios.post('https://realtimecodecollabarator.onrender.com/run', {
         code,
         language: mode,
         input,
       });
-      console.log(response.data.output);
       setOutput(response.data.output.output); // assuming the output is in response.data.output
     } catch (error) {
-      console.error(error);
       setOutput(error.toString()); // Display the error message in the output div
     }
   };

@@ -9,9 +9,9 @@ const app = express();
 const server = http.createServer(app);
 const io = new Server(server, {
   cors: {
-    origin: "http://localhost:3000", // Replace with your frontend origin
-    methods: ["GET", "POST"]
-  }
+    origin: ["https://realtimecodecollabarator.onrender.com/"], 
+    methods: ["GET", "POST"],
+  },
 });
 
 let roomClients = {}; // Object to store clients in each room
@@ -31,7 +31,7 @@ let workspaces = {}; // Object to store the current code and language for each w
 app.use(cors())
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
-app.use(express.static(path.resolve(__dirname, 'build')));
+app.use(express.static(path.join(__dirname, './client/build')));
 
 io.on('connection', (socket) => {
 
@@ -80,7 +80,7 @@ io.on('connection', (socket) => {
     currentCode = newCode;
     socket.to(workspaceId).emit('codeChange', newCode);
   });
-  
+
   // Listen for the 'reset' event
   socket.on('reset', (defaultCode) => {
     const workspaceId = getWorkspaceIdForSocket(socket.id);
@@ -92,7 +92,8 @@ io.on('connection', (socket) => {
 })
 
 
-app.get('*', (req, res) => res.sendFile(path.resolve('build', 'index.html')));
+app.get('*', (req, res) =>
+ res.sendFile(path.join(__dirname, './client/build/index.html')));
 app.post('/run', async (req, res) => {
   try {
     const { language, code, input } = req.body;

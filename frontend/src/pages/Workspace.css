@@ -1,3 +1,7 @@
+::-webkit-scrollbar {
+  display: none;
+}
+
 .mobile-message {
   position: fixed;
   top: 0;
@@ -13,109 +17,133 @@
   z-index: 9999;
 }
 
-.workspace{
-  height:auto;
-  width:100vw;
- }
-  .navbar{
-    width:100vw;
-    height:auto;
-    display: flex;
-    flex-direction: row;
-  }
-  .logo{
-    margin-top:0px;
-    font-family: 'Teko', sans-serif;
-    font-size: 2.5rem;
-    margin-bottom:1rem;
-    font-weight: 800;
-    color:rgb(228, 246, 246);
-    text-align: left;
-    padding:2rem 0rem 0rem 4rem !important;
-  }
-  .buttons{
-   
-    color:rgb(228, 246, 246);
-    align-self: center;
-   
-    margin:0 auto;
-  }
-  .buttons button {
-    margin-right: 1rem; /* Add right margin to all buttons */
-    margin-left: 0rem; /* Add right margin to all buttons */
-  }
-  
-  .buttons button:last-child {
-    margin-right: 0; /* Remove right margin from the last button */
-  }
-  .users{
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    margin-right:2rem;
-  }
-  .avatars{
-    margin-right:1rem;
-  }
-  .workspace-area{
-    width:100vw;
-    display: flex;
-    flex-direction: row;
-    margin-top: 5rem;
-    height: 80vh;
-  }
-  .codeeditor{
-    width:80%;
-    position: relative;
-    flex-grow: 1; /* Add this */
-  display: flex; /* Add this */
-  flex-direction: column; 
-  height:100%;
-  }
+.workspace {
+  height: auto;
+  width: 100vw;
+  box-sizing: border-box;
+}
+
+.navbar {
+  width: 100%;
+  height: auto;
+  display: flex;
+  flex-direction: row;
+  box-sizing: border-box;
+}
+
+.logo {
+  margin-top: 0px;
+  font-family: 'Teko', sans-serif;
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+  font-weight: 800;
+  color: rgb(228, 246, 246);
+  text-align: left !important;
+  padding: 2rem 0rem 0rem 4rem !important;
+}
+
+.buttons {
+
+  color: rgb(228, 246, 246);
+  align-self: center;
+  margin: 0 auto;
+}
+
+.buttons button {
+  margin-right: 1rem;
+  /* Add right margin to all buttons */
+  margin-left: 0rem;
+  /* Add right margin to all buttons */
+}
+
+.buttons button:last-child {
+  margin-right: 0;
+  /* Remove right margin from the last button */
+}
+
+.users {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin-right: 2rem;
+}
+
+.avatars {
+  margin-right: 1rem;
+}
+
+.workspace-area {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  margin-top: 5rem;
+
+}
+
+.codeeditor {
+  width: 80%;
+  position: relative;
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
 .CodeMirror {
-  font-size: 1.3rem; /* Increase the font size */
-  line-height: 1.2; /* Increase the line spacing */
-  height: 750px;
+  font-size: 1rem;
+  /* Increase the font size */
+  line-height: 1.2;
+  /* Increase the line spacing */
+  height: 80vh;
 }
+
 .editor-buttons {
+
   position: absolute;
-  top: 0;
-  right: 1rem;
+  top: 0.2rem;
+  right: 2rem;
 }
-.editor-buttons select{
+
+.editor-buttons select {
   background-color: transparent;
   color: white;
   padding: 0.5rem 1rem;
   border-radius: 10px;
   font-size: 1rem;
-  margin-right:1rem;
+  margin-right: 1rem;
 }
-.editor-buttons select option{
+
+.editor-buttons select option {
   background-color: transparent;
   color: black;
   padding: 0.5rem 1rem;
   border-radius: 10px;
   font-size: 1rem;
 }
-.output{
+
+.output {
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding:1rem 0rem;
-  
+  box-sizing: border-box;
+  padding: 1rem 0rem;
+  width: 100%;
+
 }
-.output input{
-  width:90%;
+
+.output input {
+  width: 90%;
   background-color: transparent;
-  font-size: 1.2rem;
-  padding: 0.5rem 0rem 0.7rem 1rem; 
+  font-size: 1rem;
+  padding: 0.5rem 0rem 0.7rem 1rem;
   text-align: start;
-  color:rgba(0,0,0,0.9);
-  
+  color: rgba(0, 0, 0, 0.9);
+
 }
-.output-box{
+
+.output-box {
   margin-top: 2rem;
-  width:90%;
+  width: 90%;
   height: 400px;
   background-color: transparent;
   color: white;
@@ -126,116 +154,138 @@
 }
 
 @media screen and (max-width:768px) {
-  .workspace{
-   
-    height:100vh;
-    width:100vw;
-   
-   }
-    .navbar{
-      max-width:100vw;
-      height:auto;
-      display: flex;
-      flex-direction: column;
-    }
-    .logo{
-      margin-top:0px;
-      font-family: 'Teko', sans-serif;
-      font-size: 2.5rem;
-      margin-bottom:1rem;
-      font-weight: 800;
-      color:rgb(228, 246, 246);
-      text-align: start !important;
-      padding:2rem 0rem 0rem 2rem !important;
-     
-    }
-    .buttons{
-      color:rgb(228, 246, 246);
-      align-self: center;
-      margin:0 auto;
-      display: flex;
-      flex-direction: column;
-    }
-    .buttons button {
-      margin-right: 0rem; /* Add right margin to all buttons */
-      margin-left: 0rem; /* Add right margin to all buttons */
-      margin-bottom: 0.5rem; /* Add right margin to all buttons */
-    }
-    
-    .buttons button:last-child {
-      margin-right: 0; /* Remove right margin from the last button */
-    }
-    .users{
-      display: block;
-     position: absolute;
-     top:2.4rem;
-     right:0rem;
-    }
-    .avatars{
-      margin-right:1rem;
-      display: none;
-    }
-    .workspace-area{
-      width:100%;
-      display: flex;
-      flex-direction: row;
-      margin-top: 4rem;
-      height: 80%;
-    }
-    .codeeditor{
-      width:80%;
-      position: relative;
-      flex-grow: 1; /* Add this */
-      display: flex; /* Add this */
-      flex-direction: column; 
-      height:100%;
-    }
-  .CodeMirror {
-    font-size: 1rem; /* Increase the font size */
-    line-height: 1.2; /* Increase the line spacing */
-    height: 80vh;
-    width:100%;
-    padding-top:2.5rem;
+  .workspace {
+
+    height: 100vh;
+    width: 100vw;
+
   }
+
+  .navbar {
+    max-width: 100vw;
+    height: auto;
+    display: flex;
+    flex-direction: column;
+  }
+  .logo {
+    margin-top: 0px;
+    font-family: 'Teko', sans-serif;
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+    font-weight: 800;
+    color: rgb(228, 246, 246);
+    padding: 2rem 0rem 0rem 2rem !important;
+    align-self: flex-start;
+  }
+
+  .buttons {
+    color: rgb(228, 246, 246);
+    align-self: center;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .buttons button {
+    margin-right: 0rem;
+    /* Add right margin to all buttons */
+    margin-left: 0rem;
+    /* Add right margin to all buttons */
+    margin-bottom: 0.5rem;
+    /* Add right margin to all buttons */
+  }
+
+  .buttons button:last-child {
+    margin-right: 0;
+    /* Remove right margin from the last button */
+  }
+
+  .users {
+    display: block;
+    position: absolute;
+    top: 2.4rem;
+    right: 0rem;
+  }
+
+  .avatars {
+    margin-right: 1rem;
+    display: none;
+  }
+
+  .workspace-area {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    margin-top: 4rem;
+    height: 80%;
+  }
+
+  .codeeditor {
+    width: 80%;
+    position: relative;
+    flex-grow: 1;
+
+    display: flex;
+
+    flex-direction: column;
+    height: 100%;
+  }
+
+  .CodeMirror {
+    font-size: 1rem;
+
+    line-height: 1.2;
+
+    height: 80vh;
+    width: 100%;
+    padding-top: 2.5rem;
+  }
+
   .editor-buttons {
     position: absolute;
     top: 0.2rem;
     right: 0rem;
   }
-  .editor-buttons select{
+
+  .editor-buttons select {
     background-color: transparent;
     color: white;
     padding: 0.3rem 0.5rem;
     border-radius: 10px;
     font-size: 0.8rem;
-    margin-right:1rem;
+    margin-right: 1rem;
   }
-  .editor-buttons select option{
-    width:20% !important;
+
+  .editor-buttons select option {
+    width: 20% !important;
     background-color: transparent;
     color: black;
     padding: 0.5rem 1rem;
     border-radius: 10px;
     font-size: 1rem;
   }
+
   .editor-buttons .MuiButton-outlined {
     display: none;
   }
-  .output{
+
+  .output {
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding:1rem 0rem;
-    
-  }
-  .output input{
-    
-    display: none;
-    
-  }
-  .output-box{
+    padding: 1rem 0rem;
 
-    
+  }
+
+  .output input {
+
+    display: none;
+
+  }
+
+  .output-box {
+
+
     display: none;
   }
 }
