@@ -1,11 +1,11 @@
 # CollabCode - Real-Time Code Collaborator 🚀
 
 Welcome to our Real-Time Code Collaborator project! This platform is meticulously designed to empower developers worldwide, facilitating collaborative coding in real-time. It's a space that nurtures seamless teamwork and accelerates the entire development process.
-
+### Live Demo : https://realtimecodecollabarator.onrender.com/
 ## Features 🌟
 
 - **Real-Time Collaboration:** Work concurrently with multiple developers, witnessing changes in real-time.
-- **Multi-Language Support:** Code in your preferred language with support for C++, Java, Python, and more.
+- **Multi-Language Support:** Code in your preferred language with support for C, C++, Java and Python.
 - **MERN Stack Architecture:** Harnessing the power of MongoDB, Express.js, React.js, and Node.js for a robust and scalable application.
 
 ## Technologies Used 🛠️
@@ -44,8 +44,6 @@ npm start
 - Java
 - Python
 Feel free to contribute and expand the language support to make our platform even more versatile!
-
-### P.S. This is still under construction.Track recent progress at [https://frontend-lovat-rho-63.vercel.app/](https://frontend-lovat-rho-63.vercel.app/)
 
 ### Contributing 🤝
 We welcome contributions from the community! Whether it's bug fixes, feature enhancements, or language support additions, your input is valuable. Please refer to our Contribution Guidelines for more details.
